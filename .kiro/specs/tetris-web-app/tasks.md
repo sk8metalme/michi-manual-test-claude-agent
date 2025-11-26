@@ -78,15 +78,15 @@
 - **工数**: 1人日
 - **説明**: Spring WebSocket依存関係追加
 - **タスク**:
-  - [ ] Task 1.3.1: Spring WebSocket依存関係追加
-  - [ ] Task 1.3.2: WebSocketConfig作成（/ws/gameエンドポイント、STOMPメッセージブローカー）
-  - [ ] Task 1.3.3: STOMP送信先設定（/app/game/*, /topic/game/*）
-  - [ ] Task 1.3.4: CORS設定追加（フロントエンド接続許可）
-  - [ ] Task 1.3.5: WebSocket接続テスト実装
+  - [x] Task 1.3.1: Spring WebSocket依存関係追加
+  - [x] Task 1.3.2: WebSocketConfig作成（/ws/gameエンドポイント、STOMPメッセージブローカー）
+  - [x] Task 1.3.3: STOMP送信先設定（/app/game/*, /topic/game/*）
+  - [x] Task 1.3.4: CORS設定追加（フロントエンド接続許可）
+  - [x] Task 1.3.5: WebSocket接続テスト実装
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 10.1
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 10.1
 
 ## Phase 2: TDD実装（TDD Implementation）
 
