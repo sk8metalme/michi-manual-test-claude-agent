@@ -1,0 +1,268 @@
+# Implementation Tasks: Tetris Web Application
+
+## 1. プロジェクトセットアップと基盤構築
+
+- [ ] 1.1 Gradle + Spring Bootプロジェクト初期化
+  - Spring Boot 3.x + Java 17プロジェクトをGradleで作成
+  - 依存関係追加（Spring Web, Spring WebSocket, Spring Data JPA, H2, Lombok）
+  - パッケージ構造作成（domain, application, adapter.inbound, adapter.outbound, presentation）
+  - application.ymlで基本設定（サーバーポート、ログレベル）
+  - ビルド成功とアプリケーション起動確認
+  - _Requirements: 9.1, 9.2, 9.6, 8.1, 8.2, 8.3, 8.4_
+
+- [ ] 1.2 データベース設定とSpring Profile構成
+  - H2組み込みデータベース設定（dev/testプロファイル）
+  - PostgreSQL設定追加（prodプロファイル）
+  - scoresテーブルのDDLスクリプト作成（id, score, level, total_lines_cleared, timestamp）
+  - スコア降順インデックス設定
+  - JPA自動DDL生成設定（hibernate.ddl-auto: update）
+  - 各プロファイルでのデータベース接続確認
+  - _Requirements: 9.3, 9.5, 7.1, 7.2_
+
+- [ ] 1.3 WebSocket + STOMP設定
+  - Spring WebSocket依存関係追加
+  - WebSocketConfig作成（/ws/gameエンドポイント、STOMPメッセージブローカー）
+  - STOMP送信先設定（/app/game/*, /topic/game/*）
+  - CORS設定追加（フロントエンド接続許可）
+  - WebSocket接続テスト実装
+  - _Requirements: 10.1_
+
+## 2. Domain Layer実装（Pure Java）
+
+- [ ] 2.1 (P) Tetrominoエンティティと操作ロジック実装
+  - TetrominoType列挙型定義（I, O, T, S, Z, J, L）
+  - Position Recordクラス定義（x, y座標）
+  - Rotation列挙型定義（DEG_0, DEG_90, DEG_180, DEG_270）
+  - Tetromino Recordクラス実装（type, position, rotation）
+  - 移動メソッド実装（moveLeft, moveRight, moveDown）
+  - 回転メソッド実装（rotateClockwise）
+  - ブロック座標取得メソッド実装（getBlockPositions: 4つの座標を返す）
+  - 各操作の単体テスト作成（移動後座標検証、回転後向き検証）
+  - _Requirements: 1.1, 1.2, 1.3, 2.5_
+
+- [ ] 2.2 (P) GameFieldエンティティと衝突判定実装
+  - Block Recordクラス定義（TetrominoType type）
+  - GameField Recordクラス実装（Block[][] grid: 10×20）
+  - 衝突判定メソッド実装（canPlace: テトリミノ配置可否）
+  - テトリミノ固定メソッド実装（place: 新しいGameFieldを返す）
+  - ライン消去メソッド実装（clearLines: 横一列埋まり検出、消去、上部落下）
+  - ClearResult Record定義（updatedField, clearedLineCount）
+  - セル占有確認メソッド実装（isOccupied）
+  - 単体テスト作成（境界判定、障害物判定、ライン消去ロジック）
+  - _Requirements: 1.6, 1.7, 2.3, 3.1, 3.2, 6.1_
+
+- [ ] 2.3 GameStateアグリゲートルート実装
+  - GameStatus列挙型定義（PLAYING, GAME_OVER）
+  - Direction列挙型定義（LEFT, RIGHT, DOWN）
+  - GameStateクラス実装（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
+  - ゲーム初期化メソッド実装（initialize: ランダムテトリミノ生成）
+  - テトリミノ移動メソッド実装（moveTetromino: 衝突判定後に移動）
+  - テトリミノ回転メソッド実装（rotateTetromino: 衝突判定後に回転）
+  - ハードドロップメソッド実装（hardDrop: 即座に底まで落下）
+  - 自動落下処理メソッド実装（processAutoDropTick: 1マス下に移動、固定時はライン消去）
+  - 落下間隔取得メソッド実装（getDropInterval: レベルに応じた速度）
+  - ゲームオーバー判定実装（新規テトリミノ出現位置に障害物）
+  - 単体テスト作成（状態遷移、ゲームオーバー条件）
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 5.1, 5.2_
+
+- [ ] 2.4 (P) ScoreCalculatorロジック実装
+  - ScoreCalculatorクラス実装（Pure Function）
+  - スコア計算メソッド実装（calculateScore: 1行100点、2行300点、3行500点、4行800点）
+  - Pattern Matchingで消去ライン数別の加算値返却
+  - 単体テスト作成（0-4行の各ケース検証）
+  - _Requirements: 3.3, 3.4, 3.5, 3.6_
+
+- [ ] 2.5 (P) LevelManagerロジック実装
+  - LevelManagerクラス実装（Pure Function）
+  - レベル計算メソッド実装（calculateLevel: 10ラインごとにレベル+1、最大レベル10）
+  - 落下間隔計算メソッド実装（calculateDropInterval: レベルごとに10%増速、初期1秒）
+  - 単体テスト作成（レベル遷移、落下速度計算）
+  - _Requirements: 4.1, 4.2, 4.3, 4.5_
+
+## 3. Application Layer実装（Use Cases）
+
+- [ ] 3.1 (P) StartGameUseCase実装
+  - StartGameUseCaseインターフェース定義
+  - ユースケース実装クラス作成（GameStateを初期化）
+  - GameStateDTOレコード定義（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
+  - TetrominoDTO変換ロジック実装
+  - ドメインモデルからDTOへのマッピング実装
+  - 単体テスト作成（ゲーム開始時の初期状態検証）
+  - _Requirements: 5.4_
+
+- [ ] 3.2 (P) MoveTetrominoUseCase実装
+  - MoveTetrominoUseCaseインターフェース定義（sessionId, direction）
+  - ユースケース実装クラス作成（GameState.moveTetromino呼び出し）
+  - セッションIDベースのゲーム状態管理実装
+  - 衝突判定結果のハンドリング（移動可/不可）
+  - GameStateDTOへの変換
+  - 単体テスト作成（移動成功ケース、移動失敗ケース）
+  - _Requirements: 1.1, 1.2, 1.4, 1.6_
+
+- [ ] 3.3 (P) RotateTetrominoUseCase実装
+  - RotateTetrominoUseCaseインターフェース定義（sessionId）
+  - ユースケース実装クラス作成（GameState.rotateTetromino呼び出し）
+  - 回転後の衝突判定結果ハンドリング
+  - GameStateDTOへの変換
+  - 単体テスト作成（回転成功ケース、回転失敗ケース）
+  - _Requirements: 1.3, 1.7_
+
+- [ ] 3.4 (P) ProcessAutoDropUseCase実装
+  - ProcessAutoDropUseCaseインターフェース定義（sessionId）
+  - ユースケース実装クラス作成（GameState.processAutoDropTick呼び出し）
+  - テトリミノ固定時のライン消去処理連携
+  - スコア加算とレベル更新ロジック統合
+  - GameStateDTOへの変換
+  - 単体テスト作成（自動落下、固定、ライン消去）
+  - _Requirements: 2.2, 2.3, 2.4, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 4.2, 4.3_
+
+- [ ] 3.5 (P) SaveScoreUseCase実装
+  - SaveScoreUseCaseインターフェース定義（GameStateDTO）
+  - ScoreRepositoryPortインターフェース定義（save, findTop10ByOrderByScoreDesc）
+  - ユースケース実装クラス作成（ScoreEntityを生成、リポジトリに保存）
+  - ScoreDTO定義（id, score, level, totalLinesCleared, timestamp）
+  - タイムスタンプ自動付与ロジック
+  - @Transactional設定
+  - 単体テスト作成（スコア保存、DTO変換）
+  - _Requirements: 7.1, 7.2_
+
+## 4. Adapter Layer (Outbound)実装
+
+- [ ] 4.1 ScoreRepositoryAdapter実装
+  - ScoreEntityクラス定義（@Entity, id, score, level, totalLinesCleared, timestamp）
+  - @Table(name = "scores")設定
+  - @GeneratedValue(strategy = IDENTITY)でID自動生成
+  - ScoreRepositoryAdapterインターフェース定義（JpaRepositoryとScoreRepositoryPort継承）
+  - findTop10ByOrderByScoreDesc()メソッド定義
+  - 統合テスト作成（H2でスコア保存、過去10件取得）
+  - _Requirements: 7.1, 7.2, 7.3, 7.4, 9.3_
+
+## 5. Adapter Layer (Inbound)実装
+
+- [ ] 5.1 (P) GameRestController実装
+  - GameRestControllerクラス作成（@RestController, @RequestMapping("/api/game")）
+  - POST /api/game/startエンドポイント実装（StartGameUseCaseを呼び出し）
+  - GET /api/scoresエンドポイント実装（ScoreRepositoryから過去10件取得）
+  - @CrossOrigin設定（フロントエンド接続許可）
+  - エラーハンドリング実装（500エラー時のレスポンス）
+  - 統合テスト作成（MockMvcでエンドポイント検証）
+  - _Requirements: 5.4, 7.3, 7.4, 9.4_
+
+- [ ] 5.2 (P) GameWebSocketController実装
+  - GameWebSocketControllerクラス作成（@Controller）
+  - /app/game/moveエンドポイント実装（@MessageMapping、MoveTetrominoUseCase呼び出し）
+  - /app/game/rotateエンドポイント実装（@MessageMapping、RotateTetrominoUseCase呼び出し）
+  - /topic/game/stateへのゲーム状態配信実装（@SendTo）
+  - /topic/game/overへのゲームオーバー通知実装
+  - 自動落下処理のスケジューラー実装（@Scheduled、レベルごとに間隔変更）
+  - セッションIDベースのゲーム状態管理実装（ConcurrentHashMap）
+  - 入力検証実装（Direction値チェック）
+  - 統合テスト作成（WebSocket接続、メッセージ送受信）
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.2, 2.3, 2.4, 3.1, 3.2, 3.7, 4.2, 4.3, 4.4, 10.1_
+
+## 6. Presentation Layer実装（TypeScript + HTML5 Canvas）
+
+- [ ] 6.1 (P) GameCanvas描画ロジック実装
+  - TypeScriptプロジェクトセットアップ（tsconfig.json、Gradleトランスパイル統合）
+  - GameCanvasStateインターフェース定義（gameState, canvasContext, cellSize）
+  - GameCanvasクラス実装（HTMLCanvasElement受け取り）
+  - フィールド描画メソッド実装（drawField: 10×20グリッド、ブロック色分け）
+  - テトリミノ描画メソッド実装（drawTetromino: 現在のテトリミノ）
+  - ゴースト描画メソッド実装（半透明で落下予測位置表示）
+  - ネクストブロック描画メソッド実装（drawNextTetromino: プレビュー表示）
+  - レスポンシブデザイン実装（updateCellSize: ブラウザサイズ対応）
+  - requestAnimationFrameで60 FPS描画実装
+  - スコア、レベル、累計ライン数の画面表示
+  - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 10.2_
+
+- [ ] 6.1* (P) Canvas描画の基本テスト作成
+  - GameCanvasのレンダリングテストセットアップ（Jest + Canvas Mock）
+  - フィールド描画の単体テスト（10×20グリッド検証）
+  - テトリミノ描画の単体テスト（色分け検証）
+  - _Requirements: 6.1, 6.2_
+
+- [ ] 6.2 (P) InputHandler入力処理実装
+  - InputHandlerクラス実装（WebSocketClientを受け取り）
+  - キーボードイベントリスナー実装（keydown）
+  - キーマッピング実装（ArrowLeft → LEFT, ArrowRight → RIGHT, ArrowDown → DOWN, ArrowUp → rotate, Space → hardDrop）
+  - WebSocketメッセージ送信実装（/app/game/move, /app/game/rotate）
+  - デバウンス処理実装（キー連打対策）
+  - 有効キーの検証実装
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+
+- [ ] 6.3 WebSocketクライアント実装
+  - WebSocketClientクラス実装（STOMP.js使用）
+  - /ws/game接続確立ロジック実装
+  - /topic/game/stateサブスクライブ実装（GameStateDTOを受信）
+  - /topic/game/overサブスクライブ実装（ゲームオーバー通知）
+  - 自動再接続メカニズム実装（最大3回リトライ）
+  - 接続切断時のエラーハンドリング
+  - GameCanvasへの描画トリガー実装（ゲーム状態受信時）
+  - _Requirements: 10.1_
+
+## 7. 統合と最終テスト
+
+- [ ] 7.1 エンドツーエンドテスト実装
+  - ゲームプレイフロー全体のE2Eテスト作成（ゲーム開始→移動→回転→ライン消去→ゲームオーバー→スコア保存）
+  - 複数ユーザー同時プレイテスト作成（5セッション同時接続）
+  - ゲームオーバー後の再スタートフロー検証
+  - スコア履歴取得の検証
+  - UIインタラクションテスト（キーボード入力→画面更新）
+  - _Requirements: 5.1, 5.2, 5.3, 5.4, 7.3, 7.4, 10.3_
+
+- [ ] 7.2 パフォーマンステストと最適化
+  - WebSocketレイテンシテスト実装（操作→状態更新の時間測定、100ms以内目標）
+  - Canvas描画パフォーマンステスト実装（60 FPS維持確認）
+  - 同時接続テスト実装（5ユーザー同時プレイ時のメモリ・CPU使用率）
+  - データベース負荷テスト実装（1000件スコア保存時のクエリパフォーマンス）
+  - ボトルネック特定と最適化実施
+  - _Requirements: 10.1, 10.2, 10.3_
+
+- [ ] 7.3 コードカバレッジ検証とテスト追加
+  - JaCoCoレポート生成設定（build.gradle）
+  - 全モジュールのコードカバレッジ測定
+  - カバレッジ80%未達箇所の特定
+  - 不足しているテストケースの追加（特にドメイン層とアプリケーション層）
+  - カバレッジ80%達成確認
+  - _Requirements: 10.4_
+
+- [ ] 7.4 エラーハンドリングとロギング検証
+  - すべてのエラーケースのテスト作成（不正入力、データベース接続失敗、WebSocket切断）
+  - ユーザーフレンドリーなエラーメッセージ検証
+  - SLF4J + Logbackでのエラーログ記録確認
+  - Spring Boot Actuatorのヘルスチェックエンドポイント検証
+  - エラー発生時のグレースフルデグラデーション確認（スコア保存失敗時もゲーム続行可能）
+  - _Requirements: 10.5, 10.6_
+
+---
+
+## 要件カバレッジサマリー
+
+すべての要件（1.1-10.6）が上記タスクでカバーされています：
+
+- **Requirement 1 (テトリミノ操作)**: 2.1, 2.3, 3.2, 3.3, 5.2, 6.2
+- **Requirement 2 (自動落下)**: 2.1, 2.3, 3.4, 5.2
+- **Requirement 3 (ライン消去)**: 2.2, 2.4, 3.4
+- **Requirement 4 (レベル)**: 2.5, 3.4, 5.2
+- **Requirement 5 (ゲームオーバー)**: 2.3, 3.1, 5.1, 7.1
+- **Requirement 6 (UI)**: 2.2, 6.1
+- **Requirement 7 (スコア保存)**: 1.2, 3.5, 4.1, 5.1, 7.1
+- **Requirement 8 (オニオンアーキテクチャ)**: 1.1, 全タスク
+- **Requirement 9 (Spring Boot)**: 1.1, 1.2, 1.3, 4.1, 5.1
+- **Requirement 10 (非機能)**: 1.3, 5.2, 6.1, 6.3, 7.1, 7.2, 7.3, 7.4
+
+## 並列実行可能タスク（Pマーカー）
+
+以下のタスクは並列実行可能です（データ依存なし、ファイル競合なし）：
+
+- **Domain Layer**: 2.1, 2.2, 2.4, 2.5（2.3はこれらに依存）
+- **Application Layer**: 3.1, 3.2, 3.3, 3.4, 3.5（Domain Layer完了後）
+- **Adapter Layer**: 5.1, 5.2（Application Layer完了後）
+- **Presentation Layer**: 6.1, 6.1*, 6.2（5.2のWebSocket完了後）
+
+## タスク見積もり
+
+- **Major Tasks**: 7
+- **Sub-Tasks**: 26
+- **平均タスクサイズ**: 1-3時間
+- **総工数見積**: 約40-60時間（5-8営業日）

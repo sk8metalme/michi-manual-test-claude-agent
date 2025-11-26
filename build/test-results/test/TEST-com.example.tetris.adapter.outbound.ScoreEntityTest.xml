@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.tetris.adapter.outbound.ScoreEntityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-26T14:36:10" hostname="arigatatsuyanoMacBook-Air.local" time="0.016">
+  <properties/>
+  <testcase name="複数のスコアを保存できること()" classname="com.example.tetris.adapter.outbound.ScoreEntityTest" time="0.005"/>
+  <testcase name="タイムスタンプはnullであってはならない()" classname="com.example.tetris.adapter.outbound.ScoreEntityTest" time="0.005"/>
+  <testcase name="ScoreEntityを永続化できること()" classname="com.example.tetris.adapter.outbound.ScoreEntityTest" time="0.005"/>
+  <system-out><![CDATA[Hibernate: 
+    insert 
+    into
+        scores
+        (level, score, timestamp, total_lines_cleared, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        scores
+        (level, score, timestamp, total_lines_cleared, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        scores
+        (level, score, timestamp, total_lines_cleared, id) 
+    values
+        (?, ?, ?, ?, default)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

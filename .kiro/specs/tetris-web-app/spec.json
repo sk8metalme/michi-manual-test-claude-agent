@@ -1,0 +1,119 @@
+{
+  "feature_name": "tetris-web-app",
+  "created_at": "2025-11-26T00:00:00Z",
+  "updated_at": "2025-11-26T09:00:00Z",
+  "language": "ja",
+  "phase": "tasks-generated",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": true
+    }
+  },
+  "ready_for_implementation": true,
+  "confluence": {
+    "spaceKey": "MICHI",
+    "requirements": {
+      "pageId": "49348613",
+      "url": "https://0kuri0n.atlassian.net/wiki/spaces/Michi/pages/49348613/claude-agent+tetris-web-app",
+      "title": "[claude-agentテスト] tetris-web-app 要件定義"
+    },
+    "requirementsPageId": "49348613",
+    "requirementsUrl": "https://0kuri0n.atlassian.net/wiki/spaces/Michi/pages/49348613/claude-agent+tetris-web-app",
+    "design": {
+      "pageId": "49676289",
+      "url": "https://0kuri0n.atlassian.net/wiki/spaces/Michi/pages/49676289/claude-agent+tetris-web-app",
+      "title": "[claude-agentテスト] tetris-web-app 設計"
+    },
+    "designPageId": "49676289",
+    "designUrl": "https://0kuri0n.atlassian.net/wiki/spaces/Michi/pages/49676289/claude-agent+tetris-web-app"
+  },
+  "milestones": {
+    "requirementsCompleted": true,
+    "requirements": {
+      "completed": true
+    },
+    "designCompleted": true,
+    "design": {
+      "completed": true
+    },
+    "jiraSyncCompleted": true
+  },
+  "lastUpdated": "2025-11-26T14:15:16.705Z",
+  "testTypeSelection": {
+    "completed": true,
+    "selectedTypes": [
+      "unit",
+      "lint",
+      "build",
+      "integration",
+      "e2e",
+      "performance",
+      "security"
+    ],
+    "selectedAt": "2025-11-26T12:02:07.103Z"
+  },
+  "testSpecification": {
+    "completed": true,
+    "generatedAt": "2025-11-26T12:13:47.314Z",
+    "testTypes": [
+      "unit",
+      "lint",
+      "build",
+      "integration",
+      "e2e",
+      "performance",
+      "security"
+    ],
+    "generatedSpecs": [
+      "unit",
+      "integration",
+      "e2e",
+      "performance",
+      "security"
+    ]
+  },
+  "jira": {
+    "projectKey": "PC",
+    "epicKey": "PC-75",
+    "epicUrl": "https://0kuri0n.atlassian.net/browse/PC-75",
+    "storyKeys": [
+      "PC-104",
+      "PC-105",
+      "PC-106",
+      "PC-107",
+      "PC-108",
+      "PC-109",
+      "PC-110",
+      "PC-111",
+      "PC-112",
+      "PC-113",
+      "PC-114",
+      "PC-115",
+      "PC-116",
+      "PC-117",
+      "PC-118",
+      "PC-119",
+      "PC-120",
+      "PC-121",
+      "PC-122",
+      "PC-123",
+      "PC-124",
+      "PC-125",
+      "PC-126",
+      "PC-127",
+      "PC-128",
+      "PC-129",
+      "PC-130",
+      "PC-131"
+    ]
+  }
+}

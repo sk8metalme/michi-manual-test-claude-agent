@@ -1,0 +1,7 @@
+
+
+# Added by michi setup
+# Environment variables
+.env
+.env.local
+.env.*.local
