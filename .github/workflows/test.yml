@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew test
 
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build --info
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
