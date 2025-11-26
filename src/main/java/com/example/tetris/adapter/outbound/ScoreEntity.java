@@ -9,8 +9,23 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * スコア情報を保持するJPAエンティティ
- * scoresテーブルにマッピングされる
+ * スコア情報を保持するJPAエンティティ。
+ *
+ * <p>Tetrisゲームのプレイ結果を永続化するためのエンティティクラスです。
+ * データベースの{@code scores}テーブルにマッピングされます。</p>
+ *
+ * <p>主な機能：</p>
+ * <ul>
+ *   <li>スコアランキングの保存と取得</li>
+ *   <li>スコア降順インデックス（{@code idx_score_desc}）による高速検索</li>
+ *   <li>ゲーム統計情報（レベル、消去ライン数）の記録</li>
+ * </ul>
+ *
+ * @author AI-DLC Development Team
+ * @version 1.0.0
+ * @since 2025-11-26
+ * @see jakarta.persistence.Entity
+ * @see jakarta.persistence.Table
  */
 @Entity
 @Table(name = "scores", indexes = {

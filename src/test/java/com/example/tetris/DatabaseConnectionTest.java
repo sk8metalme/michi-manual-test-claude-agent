@@ -16,11 +16,30 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * データベース接続確認テスト
- * 各プロファイル（dev, test）でのDB接続を確認
+ * データベース接続確認テストクラス。
+ *
+ * <p>各Spring Profileでデータベース接続が正常に機能することを検証します。</p>
+ *
+ * <p>テスト対象プロファイル：</p>
+ * <ul>
+ *   <li>test：H2インメモリDB（create-dropモード）</li>
+ *   <li>dev：H2インメモリDB（updateモード）</li>
+ * </ul>
+ *
+ * <p>本番環境（prod）のPostgreSQLは、実際のデータベースが必要なため、
+ * このテストには含まれません。</p>
+ *
+ * @author AI-DLC Development Team
+ * @version 1.0.0
+ * @since 2025-11-26
  */
 class DatabaseConnectionTest {
 
+    /**
+     * testプロファイルでのデータベース接続テスト。
+     *
+     * <p>H2データベース（create-dropモード）での接続と永続化を検証します。</p>
+     */
     @Nested
     @DataJpaTest
     @ActiveProfiles("test")
@@ -62,6 +81,11 @@ class DatabaseConnectionTest {
         }
     }
 
+    /**
+     * devプロファイルでのデータベース接続テスト。
+     *
+     * <p>H2データベース（updateモード）での接続と永続化を検証します。</p>
+     */
     @Nested
     @DataJpaTest
     @ActiveProfiles("dev")

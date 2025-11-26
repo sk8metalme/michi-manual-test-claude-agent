@@ -10,6 +10,26 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * {@link ScoreEntity}のJPA永続化テストクラス。
+ *
+ * <p>このテストクラスは{@code @DataJpaTest}を使用して、
+ * JPA関連のコンポーネントのみをロードする軽量なテスト環境を構築します。</p>
+ *
+ * <p>テスト対象：</p>
+ * <ul>
+ *   <li>エンティティの永続化</li>
+ *   <li>制約条件（NOT NULL）の検証</li>
+ *   <li>ID自動生成の動作</li>
+ *   <li>複数エンティティの保存</li>
+ * </ul>
+ *
+ * @author AI-DLC Development Team
+ * @version 1.0.0
+ * @since 2025-11-26
+ * @see ScoreEntity
+ * @see DataJpaTest
+ */
 @DataJpaTest
 @ActiveProfiles("test")
 class ScoreEntityTest {
@@ -17,6 +37,16 @@ class ScoreEntityTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    /**
+     * ScoreEntityが正常にデータベースに永続化できることを検証するテスト。
+     *
+     * <p>検証内容：</p>
+     * <ul>
+     *   <li>ID自動生成（IDENTITY戦略）が動作すること</li>
+     *   <li>各フィールド値が正しく保存されること</li>
+     *   <li>timestampフィールドが設定されること</li>
+     * </ul>
+     */
     @Test
     void ScoreEntityを永続化できること() {
         // Given: スコアエンティティを作成
@@ -37,6 +67,12 @@ class ScoreEntityTest {
         assertThat(savedScore.getTimestamp()).isNotNull();
     }
 
+    /**
+     * timestampフィールドのNOT NULL制約が正しく動作することを検証するテスト。
+     *
+     * <p>timestampがnullの状態でエンティティを保存しようとすると、
+     * データベース制約違反により例外が発生することを確認します。</p>
+     */
     @Test
     void タイムスタンプはnullであってはならない() {
         // Given: タイムスタンプなしのエンティティ
@@ -56,6 +92,16 @@ class ScoreEntityTest {
         }
     }
 
+    /**
+     * 複数のScoreEntityを独立して保存できることを検証するテスト。
+     *
+     * <p>検証内容：</p>
+     * <ul>
+     *   <li>複数エンティティを連続して保存できること</li>
+     *   <li>各エンティティに異なるIDが割り当てられること</li>
+     *   <li>データの独立性が保たれること</li>
+     * </ul>
+     */
     @Test
     void 複数のスコアを保存できること() {
         // Given: 複数のスコアエンティティ
