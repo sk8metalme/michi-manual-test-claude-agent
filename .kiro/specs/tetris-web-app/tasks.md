@@ -137,21 +137,21 @@
 - **工数**: 2人日
 - **説明**: GameStatus列挙型定義（PLAYING, GAME_OVER）
 - **タスク**:
-  - [ ] Task 2.3.1: GameStatus列挙型定義（PLAYING, GAME_OVER）
-  - [ ] Task 2.3.2: Direction列挙型定義（LEFT, RIGHT, DOWN）
-  - [ ] Task 2.3.3: GameStateクラス実装（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
-  - [ ] Task 2.3.4: ゲーム初期化メソッド実装（initialize: ランダムテトリミノ生成）
-  - [ ] Task 2.3.5: テトリミノ移動メソッド実装（moveTetromino: 衝突判定後に移動）
-  - [ ] Task 2.3.6: テトリミノ回転メソッド実装（rotateTetromino: 衝突判定後に回転）
-  - [ ] Task 2.3.7: ハードドロップメソッド実装（hardDrop: 即座に底まで落下）
-  - [ ] Task 2.3.8: 自動落下処理メソッド実装（processAutoDropTick: 1マス下に移動、固定時はライン消去）
-  - [ ] Task 2.3.9: 落下間隔取得メソッド実装（getDropInterval: レベルに応じた速度）
-  - [ ] Task 2.3.10: ゲームオーバー判定実装（新規テトリミノ出現位置に障害物）
-  - [ ] Task 2.3.11: 単体テスト作成（状態遷移、ゲームオーバー条件）
+  - [x] Task 2.3.1: GameStatus列挙型定義（PLAYING, GAME_OVER）
+  - [x] Task 2.3.2: Direction列挙型定義（LEFT, RIGHT, DOWN）
+  - [x] Task 2.3.3: GameStateクラス実装（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
+  - [x] Task 2.3.4: ゲーム初期化メソッド実装（initialize: ランダムテトリミノ生成）
+  - [x] Task 2.3.5: テトリミノ移動メソッド実装（moveTetromino: 衝突判定後に移動）
+  - [x] Task 2.3.6: テトリミノ回転メソッド実装（rotateTetromino: 衝突判定後に回転）
+  - [x] Task 2.3.7: ハードドロップメソッド実装（hardDrop: 即座に底まで落下）
+  - [x] Task 2.3.8: 自動落下処理メソッド実装（processAutoDropTick: 1マス下に移動、固定時はライン消去）
+  - [x] Task 2.3.9: 落下間隔取得メソッド実装（getDropInterval: レベルに応じた速度）
+  - [x] Task 2.3.10: ゲームオーバー判定実装（新規テトリミノ出現位置に障害物）
+  - [x] Task 2.3.11: 単体テスト作成（状態遷移、ゲームオーバー条件）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 5.1, 5.2
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 5.1, 5.2
 
 ### Story 2.4: ScoreCalculatorロジック実装
 - **担当**: @Developer
