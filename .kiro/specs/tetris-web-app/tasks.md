@@ -205,16 +205,16 @@
 - **工数**: 1人日
 - **説明**: MoveTetrominoUseCaseインターフェース定義（sessionId, direction）
 - **タスク**:
-  - [ ] Task 2.7.1: MoveTetrominoUseCaseインターフェース定義（sessionId, direction）
-  - [ ] Task 2.7.2: ユースケース実装クラス作成（GameState.moveTetromino呼び出し）
-  - [ ] Task 2.7.3: セッションIDベースのゲーム状態管理実装
-  - [ ] Task 2.7.4: 衝突判定結果のハンドリング（移動可/不可）
-  - [ ] Task 2.7.5: GameStateDTOへの変換
-  - [ ] Task 2.7.6: 単体テスト作成（移動成功ケース、移動失敗ケース）
+  - [x] Task 2.7.1: MoveTetrominoUseCaseインターフェース定義（sessionId, direction）
+  - [x] Task 2.7.2: ユースケース実装クラス作成（GameState.moveTetromino呼び出し）
+  - [x] Task 2.7.3: セッションIDベースのゲーム状態管理実装
+  - [x] Task 2.7.4: 衝突判定結果のハンドリング（移動可/不可）
+  - [x] Task 2.7.5: GameStateDTOへの変換
+  - [x] Task 2.7.6: 単体テスト作成（移動成功ケース、移動失敗ケース）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 1.1, 1.2, 1.4, 1.6
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 1.1, 1.2, 1.4, 1.6
 - **並列実行**: 可能
 
 ### Story 2.8: RotateTetrominoUseCase実装
