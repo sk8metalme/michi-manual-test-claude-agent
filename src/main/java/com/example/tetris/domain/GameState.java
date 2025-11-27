@@ -238,14 +238,14 @@ public record GameState(
                     droppingTetromino.position().x(),
                     droppingTetromino.position().y() + 1
             );
-            Tetromino nextTetromino = new Tetromino(
+            Tetromino nextTetrominoCandidate = new Tetromino(
                     droppingTetromino.type(),
                     nextPos,
                     droppingTetromino.rotation()
             );
 
-            if (field.canPlace(nextTetromino)) {
-                droppingTetromino = nextTetromino;
+            if (field.canPlace(nextTetrominoCandidate)) {
+                droppingTetromino = nextTetrominoCandidate;
             } else {
                 break;  // これ以上落下できない
             }
