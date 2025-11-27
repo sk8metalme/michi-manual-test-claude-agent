@@ -99,18 +99,18 @@
 - **工数**: 1.5人日
 - **説明**: TetrominoType列挙型定義（I, O, T, S, Z, J, L）
 - **タスク**:
-  - [ ] Task 2.1.1: TetrominoType列挙型定義（I, O, T, S, Z, J, L）
-  - [ ] Task 2.1.2: Position Recordクラス定義（x, y座標）
-  - [ ] Task 2.1.3: Rotation列挙型定義（DEG_0, DEG_90, DEG_180, DEG_270）
-  - [ ] Task 2.1.4: Tetromino Recordクラス実装（type, position, rotation）
-  - [ ] Task 2.1.5: 移動メソッド実装（moveLeft, moveRight, moveDown）
-  - [ ] Task 2.1.6: 回転メソッド実装（rotateClockwise）
-  - [ ] Task 2.1.7: ブロック座標取得メソッド実装（getBlockPositions: 4つの座標を返す）
-  - [ ] Task 2.1.8: 各操作の単体テスト作成（移動後座標検証、回転後向き検証）
+  - [x] Task 2.1.1: TetrominoType列挙型定義（I, O, T, S, Z, J, L）
+  - [x] Task 2.1.2: Position Recordクラス定義（x, y座標）
+  - [x] Task 2.1.3: Rotation列挙型定義（DEG_0, DEG_90, DEG_180, DEG_270）
+  - [x] Task 2.1.4: Tetromino Recordクラス実装（type, position, rotation）
+  - [x] Task 2.1.5: 移動メソッド実装（moveLeft, moveRight, moveDown）
+  - [x] Task 2.1.6: 回転メソッド実装（rotateClockwise）
+  - [x] Task 2.1.7: ブロック座標取得メソッド実装（getBlockPositions: 4つの座標を返す）
+  - [x] Task 2.1.8: 各操作の単体テスト作成（移動後座標検証、回転後向き検証）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 1.1, 1.2, 1.3, 2.5
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 1.1, 1.2, 1.3, 2.5
 - **並列実行**: 可能
 
 ### Story 2.2: GameFieldエンティティと衝突判定実装
