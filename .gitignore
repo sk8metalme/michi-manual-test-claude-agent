@@ -71,3 +71,7 @@ docs/tmp/
 *.trace.db
 
 # Added by michi setup
+
+# Node.js
+node_modules/
+package-lock.json

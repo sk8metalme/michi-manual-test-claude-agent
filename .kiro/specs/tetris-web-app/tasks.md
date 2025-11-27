@@ -118,18 +118,18 @@
 - **工数**: 1.5人日
 - **説明**: Block Recordクラス定義（TetrominoType type）
 - **タスク**:
-  - [ ] Task 2.2.1: Block Recordクラス定義（TetrominoType type）
-  - [ ] Task 2.2.2: GameField Recordクラス実装（Block[][] grid: 10×20）
-  - [ ] Task 2.2.3: 衝突判定メソッド実装（canPlace: テトリミノ配置可否）
-  - [ ] Task 2.2.4: テトリミノ固定メソッド実装（place: 新しいGameFieldを返す）
-  - [ ] Task 2.2.5: ライン消去メソッド実装（clearLines: 横一列埋まり検出、消去、上部落下）
-  - [ ] Task 2.2.6: ClearResult Record定義（updatedField, clearedLineCount）
-  - [ ] Task 2.2.7: セル占有確認メソッド実装（isOccupied）
-  - [ ] Task 2.2.8: 単体テスト作成（境界判定、障害物判定、ライン消去ロジック）
+  - [x] Task 2.2.1: Block Recordクラス定義（TetrominoType type）
+  - [x] Task 2.2.2: GameField Recordクラス実装（Block[][] grid: 10×20）
+  - [x] Task 2.2.3: 衝突判定メソッド実装（canPlace: テトリミノ配置可否）
+  - [x] Task 2.2.4: テトリミノ固定メソッド実装（place: 新しいGameFieldを返す）
+  - [x] Task 2.2.5: ライン消去メソッド実装（clearLines: 横一列埋まり検出、消去、上部落下）
+  - [x] Task 2.2.6: ClearResult Record定義（updatedField, clearedLineCount）
+  - [x] Task 2.2.7: セル占有確認メソッド実装（isOccupied）
+  - [x] Task 2.2.8: 単体テスト作成（境界判定、障害物判定、ライン消去ロジック）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 1.6, 1.7, 2.3, 3.1, 3.2, 6.1
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 1.6, 1.7, 2.3, 3.1, 3.2, 6.1
 - **並列実行**: 可能
 
 ### Story 2.3: GameStateアグリゲートルート実装
