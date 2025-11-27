@@ -263,8 +263,13 @@ public record GameState(
         int newTotalLinesCleared = totalLinesCleared + clearResult.clearedLineCount();
 
         // 5. 次のテトリミノを currentTetromino にして、新しい nextTetromino を生成
+        // ゲームオーバー判定: 次のテトリミノがスポーン位置に配置できるかチェック
+        GameStatus newStatus = clearResult.updatedField().canPlace(nextTetromino)
+                ? status  // 配置可能ならステータス維持
+                : GameStatus.GAME_OVER;  // 配置不可能ならゲームオーバー
+
         return new GameState(
-                status,
+                newStatus,
                 nextTetromino,  // nextTetromino が currentTetromino になる
                 generateRandomTetromino(),  // 新しい nextTetromino を生成
                 clearResult.updatedField(),

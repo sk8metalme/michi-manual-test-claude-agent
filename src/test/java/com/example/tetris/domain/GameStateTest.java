@@ -463,4 +463,57 @@ class GameStateTest {
         assertTrue(level1State.getDropInterval() > level5State.getDropInterval(),
                 "高いレベルほど落下間隔が短くなるべき");
     }
+
+    /**
+     * hardDrop()メソッドが、次のテトリミノがスポーン位置に配置できない場合に
+     * ゲームオーバーになることを検証します。
+     */
+    @Test
+    void testHardDrop_GameOver_WhenNextTetrominoCannotBePlaced() {
+        // Arrange: フィールドの上部を埋めて、次のテトリミノがスポーン位置に配置できない状況を作る
+        GameField emptyField = GameField.createEmpty();
+        Block[][] grid = emptyField.grid();
+
+        // y=0-3の行を埋める（I-tetrominoの縦配置がスポーン位置に入らないようにする）
+        // スポーン位置は (4, 0) なので、x=3-6、y=0-3 を埋める
+        for (int y = 0; y < 4; y++) {
+            for (int x = 3; x <= 6; x++) {
+                grid[y][x] = new Block(TetrominoType.T);
+            }
+        }
+        GameField almostFullField = new GameField(grid);
+
+        // 現在のテトリミノはフィールドの下部に配置（hardDropで即座に固定される）
+        Tetromino currentTetromino = new Tetromino(
+                TetrominoType.O,
+                new Position(0, 18),  // 左下隅に配置
+                Rotation.DEG_0
+        );
+
+        // 次のテトリミノ（I-tetromino縦配置、スポーン位置に配置できない）
+        Tetromino nextTetromino = new Tetromino(
+                TetrominoType.I,
+                new Position(4, 0),  // スポーン位置
+                Rotation.DEG_90  // 縦配置（y=0-3を占有）
+        );
+
+        GameState gameState = new GameState(
+                GameStatus.PLAYING,
+                currentTetromino,
+                nextTetromino,
+                almostFullField,
+                0,
+                1,
+                0
+        );
+
+        // Act
+        GameState result = gameState.hardDrop();
+
+        // Assert
+        assertEquals(GameStatus.GAME_OVER, result.status(),
+                "次のテトリミノがスポーン位置に配置できない場合、ゲームオーバーになるべき");
+        assertEquals(nextTetromino, result.currentTetromino(),
+                "ゲームオーバーでも次のテトリミノはcurrentTetrominoに昇格するべき");
+    }
 }
