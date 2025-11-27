@@ -289,4 +289,31 @@ class GameFieldTest {
             }
         }
     }
+
+    /**
+     * GameFieldの不変性が防御的コピーにより保護されていることを検証します。
+     *
+     * <p>外部から渡した配列を変更しても、GameFieldの内部状態が影響を受けないことを確認します。</p>
+     */
+    @Test
+    void testImmutability_DefensiveCopy() {
+        // Arrange
+        Block[][] externalGrid = new Block[GameField.HEIGHT][GameField.WIDTH];
+        externalGrid[5][3] = new Block(TetrominoType.I);
+        GameField field = new GameField(externalGrid);
+
+        // Act - 外部配列を変更
+        externalGrid[5][3] = null;  // 元の配列を変更
+        externalGrid[10][7] = new Block(TetrominoType.T);  // 新しいブロックを追加
+
+        // Assert - GameFieldの内部状態は影響を受けない
+        assertTrue(field.isOccupied(3, 5),
+                "外部配列の変更（null代入）はGameFieldの内部状態に影響を与えないべき");
+        assertFalse(field.isOccupied(7, 10),
+                "外部配列への追加はGameFieldの内部状態に影響を与えないべき");
+
+        // 元の配列とGameFieldの配列が異なるインスタンスであることを確認
+        assertNotSame(externalGrid, field.grid(),
+                "GameFieldは防御的コピーを保持するべき（同じ配列インスタンスではない）");
+    }
 }

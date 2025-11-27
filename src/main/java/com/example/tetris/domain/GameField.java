@@ -25,6 +25,21 @@ package com.example.tetris.domain;
  */
 public record GameField(Block[][] grid) {
     /**
+     * Compact constructor: 防御的コピーを行い、不変性を保証します。
+     *
+     * <p>外部から渡された配列を直接使用せず、ディープコピーを作成します。
+     * これにより、外部からの配列変更が内部状態に影響を与えないことを保証します。</p>
+     */
+    public GameField {
+        // ディープコピー: 各行を個別にコピー
+        Block[][] defensiveCopy = new Block[grid.length][];
+        for (int i = 0; i < grid.length; i++) {
+            defensiveCopy[i] = grid[i].clone();
+        }
+        grid = defensiveCopy;
+    }
+
+    /**
      * フィールドの幅（列数）。
      */
     public static final int WIDTH = 10;
