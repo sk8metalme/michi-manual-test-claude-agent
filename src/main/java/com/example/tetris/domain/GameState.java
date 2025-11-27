@@ -262,6 +262,9 @@ public record GameState(
         int newScore = score + earnedScore;
         int newTotalLinesCleared = totalLinesCleared + clearResult.clearedLineCount();
 
+        // 4.5. レベル計算（累計クリア済みライン数に応じて）
+        int newLevel = LevelManager.calculateLevel(newTotalLinesCleared);
+
         // 5. 次のテトリミノを currentTetromino にして、新しい nextTetromino を生成
         // ゲームオーバー判定: 次のテトリミノがスポーン位置に配置できるかチェック
         GameStatus newStatus = clearResult.updatedField().canPlace(nextTetromino)
@@ -274,7 +277,7 @@ public record GameState(
                 generateRandomTetromino(),  // 新しい nextTetromino を生成
                 clearResult.updatedField(),
                 newScore,
-                level,
+                newLevel,  // レベルを更新
                 newTotalLinesCleared
         );
     }
