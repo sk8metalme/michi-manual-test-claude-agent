@@ -282,26 +282,14 @@ public record GameState(
     /**
      * ライン消去数に応じてスコアを計算します。
      *
-     * <p>スコア計算式：</p>
-     * <ul>
-     *   <li>1ライン: 40点</li>
-     *   <li>2ライン: 100点</li>
-     *   <li>3ライン: 300点</li>
-     *   <li>4ライン（テトリス）: 1200点</li>
-     * </ul>
+     * <p>スコア計算はScoreCalculatorクラスに委譲します。</p>
      *
      * @param clearedLines 消去ライン数
      * @return 獲得スコア
+     * @see ScoreCalculator#calculateScore(int)
      */
     private int calculateScore(int clearedLines) {
-        return switch (clearedLines) {
-            case 0 -> 0;
-            case 1 -> 40;
-            case 2 -> 100;
-            case 3 -> 300;
-            case 4 -> 1200;
-            default -> clearedLines * 40;  // 5ライン以上は1ライン40点で計算
-        };
+        return ScoreCalculator.calculateScore(clearedLines);
     }
 
     /**
@@ -328,24 +316,12 @@ public record GameState(
     /**
      * 現在のレベルに応じた自動落下間隔（ミリ秒）を返します。
      *
-     * <p>レベルが上がるにつれて落下間隔が短くなり、ゲームが難しくなります。</p>
-     * <ul>
-     *   <li>レベル1: 1000ms</li>
-     *   <li>レベル2: 900ms</li>
-     *   <li>レベル3: 800ms</li>
-     *   <li>...</li>
-     *   <li>レベル10以上: 100ms</li>
-     * </ul>
+     * <p>落下間隔計算はLevelManagerクラスに委譲します。</p>
      *
      * @return 落下間隔（ミリ秒）
+     * @see LevelManager#calculateDropInterval(int)
      */
     public int getDropInterval() {
-        // レベル1: 1000ms, レベル10: 100ms
-        int baseInterval = 1000;
-        int decreasePerLevel = 100;
-        int minInterval = 100;
-
-        int interval = baseInterval - (level - 1) * decreasePerLevel;
-        return Math.max(interval, minInterval);
+        return LevelManager.calculateDropInterval(level);
     }
 }
