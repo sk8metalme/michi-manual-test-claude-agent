@@ -371,8 +371,19 @@ class GameStateTest {
      */
     @Test
     void testHardDrop_BasicDrop() {
-        // Arrange
-        GameState gameState = GameState.initialize();
+        // Arrange - 明示的に異なるタイプのテトリミノを使用（ランダム性を排除）
+        Tetromino iTetromino = new Tetromino(TetrominoType.I, new Position(4, 0), Rotation.DEG_0);
+        Tetromino oTetromino = new Tetromino(TetrominoType.O, new Position(4, 0), Rotation.DEG_0);
+
+        GameState gameState = new GameState(
+                GameStatus.PLAYING,
+                iTetromino,  // I型をcurrentに
+                oTetromino,  // O型をnextに（異なるタイプを保証）
+                GameField.createEmpty(),
+                0,
+                1,
+                0
+        );
 
         // Act
         GameState droppedState = gameState.hardDrop();
@@ -515,5 +526,67 @@ class GameStateTest {
                 "次のテトリミノがスポーン位置に配置できない場合、ゲームオーバーになるべき");
         assertEquals(nextTetromino, result.currentTetromino(),
                 "ゲームオーバーでも次のテトリミノはcurrentTetrominoに昇格するべき");
+    }
+
+    /**
+     * ライン消去後にレベルが正しく更新されることを検証します。
+     *
+     * <p>このテストは、10ライン消去後にレベルが1から2に上がることを確認します。
+     * また、レベル上昇により落下間隔が短くなることも検証します。</p>
+     */
+    @Test
+    void testHardDrop_LevelIncreases_After10LinesCleared() {
+        // Arrange: 1ライン分のブロックがあるフィールドを作成（簡単なテストケース）
+        Block[][] grid = new Block[GameField.HEIGHT][GameField.WIDTH];
+
+        // 最下行を埋める（I型テトリミノの4マス分だけ空ける）
+        for (int x = 0; x < GameField.WIDTH; x++) {
+            if (x < 4) {
+                grid[GameField.HEIGHT - 1][x] = null;  // 左4マスは空ける
+            } else {
+                grid[GameField.HEIGHT - 1][x] = new Block(TetrominoType.O);  // 残りは埋める
+            }
+        }
+
+        GameField fieldWith1LineAlmostFull = new GameField(grid);
+
+        // I型テトリミノ（横向き）を上部に配置
+        Tetromino iTetromino = new Tetromino(
+                TetrominoType.I,
+                new Position(1, 0),  // 上部中央
+                Rotation.DEG_0  // 横向き
+        );
+
+        Tetromino nextTetromino = new Tetromino(
+                TetrominoType.O,
+                new Position(4, 0),
+                Rotation.DEG_0
+        );
+
+        // 既に9ライン消去済みの状態でゲームを開始
+        GameState gameState = new GameState(
+                GameStatus.PLAYING,
+                iTetromino,
+                nextTetromino,
+                fieldWith1LineAlmostFull,
+                0,
+                1,  // 初期レベル1
+                9   // 既に9ライン消去済み
+        );
+
+        // 初期状態の確認
+        assertEquals(1, gameState.level(), "初期レベルは1であるべき");
+        assertEquals(1000, gameState.getDropInterval(), "レベル1の落下間隔は1000msであるべき");
+
+        // Act: hardDropを実行（1行消去 → 累計10行 → レベル2になるはず）
+        GameState result = gameState.hardDrop();
+
+        // Assert: レベルが2に上がることを確認
+        assertEquals(2, result.level(), "10ライン消去後はレベル2になるべき");
+        assertEquals(10, result.totalLinesCleared(), "累計10ライン消去されているべき");
+        assertEquals(900, result.getDropInterval(), "レベル2の落下間隔は900msであるべき");
+
+        // スコアも正しく加算されることを確認（1行消去 = 100点）
+        assertEquals(100, result.score(), "1行消去で100点獲得するべき");
     }
 }
