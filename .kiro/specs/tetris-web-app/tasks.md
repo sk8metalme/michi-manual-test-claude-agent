@@ -222,15 +222,15 @@
 - **工数**: 1人日
 - **説明**: RotateTetrominoUseCaseインターフェース定義（sessionId）
 - **タスク**:
-  - [ ] Task 2.8.1: RotateTetrominoUseCaseインターフェース定義（sessionId）
-  - [ ] Task 2.8.2: ユースケース実装クラス作成（GameState.rotateTetromino呼び出し）
-  - [ ] Task 2.8.3: 回転後の衝突判定結果ハンドリング
-  - [ ] Task 2.8.4: GameStateDTOへの変換
-  - [ ] Task 2.8.5: 単体テスト作成（回転成功ケース、回転失敗ケース）
+  - [x] Task 2.8.1: RotateTetrominoUseCaseインターフェース定義（sessionId）
+  - [x] Task 2.8.2: ユースケース実装クラス作成（GameState.rotateTetromino呼び出し）
+  - [x] Task 2.8.3: 回転後の衝突判定結果ハンドリング
+  - [x] Task 2.8.4: GameStateDTOへの変換
+  - [x] Task 2.8.5: 単体テスト作成（回転成功ケース、回転失敗ケース）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 1.3, 1.7
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 1.3, 1.7
 - **並列実行**: 可能
 
 ### Story 2.9: ProcessAutoDropUseCase実装
