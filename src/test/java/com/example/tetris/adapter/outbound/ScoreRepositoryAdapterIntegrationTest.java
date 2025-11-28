@@ -1,9 +1,11 @@
 package com.example.tetris.adapter.outbound;
 
+import com.example.tetris.application.usecase.StartGameUseCase;
 import com.example.tetris.domain.Score;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -41,6 +43,9 @@ class ScoreRepositoryAdapterIntegrationTest {
 
     @Autowired
     private ScoreRepositoryAdapter scoreRepositoryAdapter;
+
+    @MockBean
+    private StartGameUseCase startGameUseCase;
 
     /**
      * スコアが正しくデータベースに保存されることを確認。
