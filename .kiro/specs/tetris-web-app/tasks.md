@@ -238,16 +238,16 @@
 - **工数**: 1人日
 - **説明**: ProcessAutoDropUseCaseインターフェース定義（sessionId）
 - **タスク**:
-  - [ ] Task 2.9.1: ProcessAutoDropUseCaseインターフェース定義（sessionId）
-  - [ ] Task 2.9.2: ユースケース実装クラス作成（GameState.processAutoDropTick呼び出し）
-  - [ ] Task 2.9.3: テトリミノ固定時のライン消去処理連携
-  - [ ] Task 2.9.4: スコア加算とレベル更新ロジック統合
-  - [ ] Task 2.9.5: GameStateDTOへの変換
-  - [ ] Task 2.9.6: 単体テスト作成（自動落下、固定、ライン消去）
+  - [x] Task 2.9.1: ProcessAutoDropUseCaseインターフェース定義（sessionId）
+  - [x] Task 2.9.2: ユースケース実装クラス作成（GameState.processAutoDropTick呼び出し）
+  - [x] Task 2.9.3: テトリミノ固定時のライン消去処理連携
+  - [x] Task 2.9.4: スコア加算とレベル更新ロジック統合
+  - [x] Task 2.9.5: GameStateDTOへの変換
+  - [x] Task 2.9.6: 単体テスト作成（自動落下、固定、ライン消去）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 2.2, 2.3, 2.4, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 4.2, 4.3
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 2.2, 2.3, 2.4, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 4.2, 4.3
 - **並列実行**: 可能
 
 ### Story 2.10: SaveScoreUseCase実装
