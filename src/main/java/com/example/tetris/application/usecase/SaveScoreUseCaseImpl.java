@@ -4,7 +4,6 @@ import com.example.tetris.adapter.outbound.ScoreEntity;
 import com.example.tetris.application.dto.GameStateDTO;
 import com.example.tetris.application.dto.ScoreDTO;
 import com.example.tetris.application.port.ScoreRepositoryPort;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -33,8 +32,9 @@ import java.util.Objects;
  * @author AI-DLC Development Team
  * @version 1.0.0
  * @since 2025-11-28
+ *
+ * <p><b>注意:</b> @Componentアノテーションは、Story 2.11でScoreRepositoryAdapterを実装した後に追加します。</p>
  */
-@Component
 public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
 
     private final ScoreRepositoryPort scoreRepositoryPort;
