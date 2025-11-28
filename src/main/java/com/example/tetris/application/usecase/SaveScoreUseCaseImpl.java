@@ -1,9 +1,10 @@
 package com.example.tetris.application.usecase;
 
-import com.example.tetris.adapter.outbound.ScoreEntity;
 import com.example.tetris.application.dto.GameStateDTO;
 import com.example.tetris.application.dto.ScoreDTO;
 import com.example.tetris.application.port.ScoreRepositoryPort;
+import com.example.tetris.domain.Score;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * <ol>
  *   <li>GameStateDTOからスコア、レベル、消去ライン数を抽出</li>
  *   <li>現在時刻をタイムスタンプとして付与</li>
- *   <li>ScoreEntityを生成</li>
+ *   <li>Scoreドメインモデルを生成</li>
  *   <li>ScoreRepositoryPortを介してデータベースに保存</li>
  *   <li>保存結果をScoreDTOに変換して返却</li>
  * </ol>
@@ -29,12 +30,18 @@ import java.util.Objects;
  *   <li>要件7.2: スコア保存時にタイムスタンプを付与</li>
  * </ul>
  *
+ * <h3>クリーンアーキテクチャ:</h3>
+ * <ul>
+ *   <li>ドメインモデル（Score）を使用</li>
+ *   <li>永続化の詳細（ScoreEntity）には依存しない</li>
+ *   <li>アダプター層（ScoreRepositoryAdapter）でマッピングを実施</li>
+ * </ul>
+ *
  * @author AI-DLC Development Team
  * @version 1.0.0
  * @since 2025-11-28
- *
- * <p><b>注意:</b> @Componentアノテーションは、Story 2.11でScoreRepositoryAdapterを実装した後に追加します。</p>
  */
+@Component
 public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
 
     private final ScoreRepositoryPort scoreRepositoryPort;
@@ -67,9 +74,8 @@ public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
         // 1. タイムスタンプを付与（要件7.2）
         LocalDateTime timestamp = LocalDateTime.now();
 
-        // 2. ScoreEntityを生成（要件7.1）
-        ScoreEntity scoreEntity = new ScoreEntity(
-                null,  // IDは自動採番
+        // 2. Scoreドメインモデルを生成（要件7.1）
+        Score score = Score.create(
                 gameStateDTO.score(),
                 gameStateDTO.level(),
                 gameStateDTO.totalLinesCleared(),
@@ -77,15 +83,15 @@ public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
         );
 
         // 3. リポジトリに保存
-        ScoreEntity savedEntity = scoreRepositoryPort.save(scoreEntity);
+        Score savedScore = scoreRepositoryPort.save(score);
 
         // 4. ScoreDTOに変換して返却
         return new ScoreDTO(
-                savedEntity.getId(),
-                savedEntity.getScore(),
-                savedEntity.getLevel(),
-                savedEntity.getTotalLinesCleared(),
-                savedEntity.getTimestamp()
+                savedScore.id(),
+                savedScore.score(),
+                savedScore.level(),
+                savedScore.totalLinesCleared(),
+                savedScore.timestamp()
         );
     }
 }
