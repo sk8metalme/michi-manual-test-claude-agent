@@ -59,6 +59,16 @@ public class ProcessAutoDropUseCaseImpl implements ProcessAutoDropUseCase {
     private final Map<String, GameState> sessionStates = new ConcurrentHashMap<>();
 
     /**
+     * セッションIDの最大長（文字数）。
+     */
+    private static final int MAX_SESSION_ID_LENGTH = 256;
+
+    /**
+     * セッションの最大数。
+     */
+    private static final int MAX_SESSIONS = 10000;
+
+    /**
      * 自動落下処理を実行します。
      *
      * <p>セッションIDに紐づくGameStateを取得し、存在しない場合は初期化します。
@@ -87,13 +97,18 @@ public class ProcessAutoDropUseCaseImpl implements ProcessAutoDropUseCase {
      */
     @Override
     public GameStateDTO execute(String sessionId) {
-        // 1. null チェック
-        if (sessionId == null) {
-            throw new NullPointerException("sessionId must not be null");
-        }
+        // 1. sessionIdのバリデーション
+        validateSessionId(sessionId);
 
         // 2. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
-        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> GameState.initialize());
+        // computeIfAbsent内でセッション数チェックを行うことで、アトミックな操作を実現
+        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> {
+            // 新規セッション作成時のみサイズチェック
+            if (sessionStates.size() >= MAX_SESSIONS) {
+                throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
+            }
+            return GameState.initialize();
+        });
 
         // 3. 自動落下処理を実行
         // processAutoDropTick()は以下を内部で実行します：
@@ -106,5 +121,33 @@ public class ProcessAutoDropUseCaseImpl implements ProcessAutoDropUseCase {
 
         // 5. DTOに変換して返却
         return GameStateMapper.toDTO(newState);
+    }
+
+    @Override
+    public void removeSession(String sessionId) {
+        if (sessionId == null) {
+            throw new NullPointerException("sessionId must not be null");
+        }
+        sessionStates.remove(sessionId);
+    }
+
+    /**
+     * sessionIdのバリデーションを行います。
+     *
+     * @param sessionId 検証するセッションID
+     * @throws NullPointerException sessionIdがnullの場合
+     * @throws IllegalArgumentException sessionIdが空文字列、または最大長を超える場合
+     */
+    private void validateSessionId(String sessionId) {
+        if (sessionId == null) {
+            throw new NullPointerException("sessionId must not be null");
+        }
+        if (sessionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("sessionId must not be empty");
+        }
+        if (sessionId.length() > MAX_SESSION_ID_LENGTH) {
+            throw new IllegalArgumentException(
+                    "sessionId exceeds maximum length (" + MAX_SESSION_ID_LENGTH + "): " + sessionId.length());
+        }
     }
 }

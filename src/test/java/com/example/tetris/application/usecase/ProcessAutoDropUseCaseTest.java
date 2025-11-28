@@ -81,11 +81,11 @@ class ProcessAutoDropUseCaseTest {
     @DisplayName("底まで落下すると、テトリミノが固定され新しいテトリミノが生成される")
     void testAutoDropTick_ReachBottom_FixAndSpawnNew() {
         // Arrange: 初回の自動落下を実行
-        GameStateDTO initial = processAutoDropUseCase.execute(testSessionId);
+        processAutoDropUseCase.execute(testSessionId);
 
         // 20回以上自動落下を繰り返す（テトリミノを底まで落とす）
         // フィールドの高さは20、テトリミノの初期y位置は0
-        GameStateDTO current = initial;
+        GameStateDTO current = null;
         for (int i = 0; i < 25; i++) {
             current = processAutoDropUseCase.execute(testSessionId);
         }
@@ -192,5 +192,72 @@ class ProcessAutoDropUseCaseTest {
                 "初期レベルは1であるべき");
         assertEquals(0, result.totalLinesCleared(),
                 "初期状態では累計クリア済みライン数は0であるべき");
+    }
+
+    @Test
+    @DisplayName("removeSession()でセッションが正常に削除される")
+    void testRemoveSession_Success() {
+        // Arrange: セッションを作成
+        processAutoDropUseCase.execute(testSessionId);
+        processAutoDropUseCase.execute(testSessionId); // y=2まで移動
+
+        // Act: セッションを削除
+        processAutoDropUseCase.removeSession(testSessionId);
+
+        // 再度同じセッションIDで実行すると、新しいセッションとして初期化される
+        GameStateDTO result = processAutoDropUseCase.execute(testSessionId);
+
+        // Assert: 新しいセッションとして初期化されている（y座標が1）
+        assertEquals(1, result.currentTetromino().y(),
+                "セッション削除後、再初期化されてy座標は1であるべき");
+    }
+
+    @Test
+    @DisplayName("removeSession()にnullを渡すとNullPointerExceptionがスローされる")
+    void testRemoveSession_NullSessionId_ThrowsException() {
+        // Act & Assert
+        assertThrows(NullPointerException.class, () -> {
+            processAutoDropUseCase.removeSession(null);
+        }, "nullのセッションIDではNullPointerExceptionがスローされるべき");
+    }
+
+    @Test
+    @DisplayName("空文字列のセッションIDでIllegalArgumentExceptionがスローされる")
+    void testExecute_EmptySessionId_ThrowsException() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> {
+            processAutoDropUseCase.execute("");
+        }, "空文字列のセッションIDではIllegalArgumentExceptionがスローされるべき");
+
+        // 空白文字のみのセッションIDもエラー
+        assertThrows(IllegalArgumentException.class, () -> {
+            processAutoDropUseCase.execute("   ");
+        }, "空白文字のみのセッションIDではIllegalArgumentExceptionがスローされるべき");
+    }
+
+    @Test
+    @DisplayName("256文字を超えるセッションIDでIllegalArgumentExceptionがスローされる")
+    void testExecute_TooLongSessionId_ThrowsException() {
+        // Arrange: 257文字のセッションIDを作成
+        String longSessionId = "a".repeat(257);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> {
+            processAutoDropUseCase.execute(longSessionId);
+        }, "256文字を超えるセッションIDではIllegalArgumentExceptionがスローされるべき");
+    }
+
+    @Test
+    @DisplayName("最大セッション数に到達するとIllegalStateExceptionがスローされる")
+    void testExecute_MaxSessionsReached_ThrowsException() {
+        // Arrange: 10000個のセッションを作成（MAX_SESSIONS = 10000）
+        for (int i = 0; i < 10000; i++) {
+            processAutoDropUseCase.execute("session-" + i);
+        }
+
+        // Act & Assert: 10001個目のセッションを作成しようとするとエラー
+        assertThrows(IllegalStateException.class, () -> {
+            processAutoDropUseCase.execute("session-10001");
+        }, "最大セッション数到達時にはIllegalStateExceptionがスローされるべき");
     }
 }
