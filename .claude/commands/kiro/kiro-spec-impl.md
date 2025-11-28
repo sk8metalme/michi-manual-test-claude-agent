@@ -134,7 +134,7 @@ For each Story implementation:
 
 After all reviews pass successfully, ask the user:
 
-```
+```text
 ✅ All reviews completed successfully!
    - Code Review: PASSED
    - Security Review: PASSED
@@ -181,7 +181,7 @@ michi spec-impl:complete user-auth PROJ-123
 
 ### After (1 command with auto-detection)
 
-```
+```bash
 /kiro:spec-impl user-auth
 # JIRA info auto-detected from spec.json
 # Epic + first Story -> "In Progress"

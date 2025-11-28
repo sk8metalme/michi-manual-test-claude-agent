@@ -100,24 +100,26 @@ public class ProcessAutoDropUseCaseImpl implements ProcessAutoDropUseCase {
         // 1. sessionIdのバリデーション
         validateSessionId(sessionId);
 
-        // 2. セッション数の制限チェック
-        if (!sessionStates.containsKey(sessionId) && sessionStates.size() >= MAX_SESSIONS) {
-            throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
-        }
+        // 2. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
+        // computeIfAbsent内でセッション数チェックを行うことで、アトミックな操作を実現
+        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> {
+            // 新規セッション作成時のみサイズチェック
+            if (sessionStates.size() >= MAX_SESSIONS) {
+                throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
+            }
+            return GameState.initialize();
+        });
 
-        // 3. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
-        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> GameState.initialize());
-
-        // 4. 自動落下処理を実行
+        // 3. 自動落下処理を実行
         // processAutoDropTick()は以下を内部で実行します：
         // - テトリミノを1マス下に移動を試みる
         // - 移動不可能な場合は固定→ライン消去→スコア加算→レベル更新→次テトリミノ生成
         GameState newState = currentState.processAutoDropTick();
 
-        // 5. 処理後のGameStateをセッション管理領域に保存
+        // 4. 処理後のGameStateをセッション管理領域に保存
         sessionStates.put(sessionId, newState);
 
-        // 6. DTOに変換して返却
+        // 5. DTOに変換して返却
         return GameStateMapper.toDTO(newState);
     }
 

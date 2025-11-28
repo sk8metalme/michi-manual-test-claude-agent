@@ -81,21 +81,23 @@ public class MoveTetrominoUseCaseImpl implements MoveTetrominoUseCase {
             throw new NullPointerException("direction must not be null");
         }
 
-        // 2. セッション数の制限チェック
-        if (!sessionStates.containsKey(sessionId) && sessionStates.size() >= MAX_SESSIONS) {
-            throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
-        }
+        // 2. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
+        // computeIfAbsent内でセッション数チェックを行うことで、アトミックな操作を実現
+        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> {
+            // 新規セッション作成時のみサイズチェック
+            if (sessionStates.size() >= MAX_SESSIONS) {
+                throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
+            }
+            return GameState.initialize();
+        });
 
-        // 3. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
-        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> GameState.initialize());
-
-        // 4. テトリミノを移動（衝突判定結果は GameState.moveTetromino() 内でハンドリング）
+        // 3. テトリミノを移動（衝突判定結果は GameState.moveTetromino() 内でハンドリング）
         GameState newState = currentState.moveTetromino(direction);
 
-        // 5. 移動後のGameStateをセッション管理領域に保存
+        // 4. 移動後のGameStateをセッション管理領域に保存
         sessionStates.put(sessionId, newState);
 
-        // 6. DTOに変換して返却
+        // 5. DTOに変換して返却
         return GameStateMapper.toDTO(newState);
     }
 
