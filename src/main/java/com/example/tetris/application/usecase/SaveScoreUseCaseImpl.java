@@ -4,9 +4,11 @@ import com.example.tetris.adapter.outbound.ScoreEntity;
 import com.example.tetris.application.dto.GameStateDTO;
 import com.example.tetris.application.dto.ScoreDTO;
 import com.example.tetris.application.port.ScoreRepositoryPort;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * SaveScoreUseCaseの実装クラス。
@@ -32,6 +34,7 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  * @since 2025-11-28
  */
+@Component
 public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
 
     private final ScoreRepositoryPort scoreRepositoryPort;
@@ -53,10 +56,14 @@ public class SaveScoreUseCaseImpl implements SaveScoreUseCase {
      *
      * @param gameStateDTO ゲーム状態DTO（スコア、レベル、消去ライン数を含む）
      * @return 保存されたスコアDTO（IDとタイムスタンプが付与済み）
+     * @throws NullPointerException gameStateDTOがnullの場合
      */
     @Override
     @Transactional
     public ScoreDTO saveScore(GameStateDTO gameStateDTO) {
+        // 0. 入力検証
+        Objects.requireNonNull(gameStateDTO, "gameStateDTO must not be null");
+
         // 1. タイムスタンプを付与（要件7.2）
         LocalDateTime timestamp = LocalDateTime.now();
 
