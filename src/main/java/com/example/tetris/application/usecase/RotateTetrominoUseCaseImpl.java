@@ -51,6 +51,16 @@ public class RotateTetrominoUseCaseImpl implements RotateTetrominoUseCase {
     private final Map<String, GameState> sessionStates = new ConcurrentHashMap<>();
 
     /**
+     * セッションIDの最大長（文字数）。
+     */
+    private static final int MAX_SESSION_ID_LENGTH = 256;
+
+    /**
+     * セッションの最大数。
+     */
+    private static final int MAX_SESSIONS = 10000;
+
+    /**
      * テトリミノを時計回りに90度回転します。
      *
      * <p>セッションIDに紐づくGameStateを取得し、存在しない場合は初期化します。
@@ -63,21 +73,52 @@ public class RotateTetrominoUseCaseImpl implements RotateTetrominoUseCase {
      */
     @Override
     public GameStateDTO execute(String sessionId) {
-        // 1. null チェック
+        // 1. sessionIdのバリデーション
+        validateSessionId(sessionId);
+
+        // 2. セッション数の制限チェック
+        if (!sessionStates.containsKey(sessionId) && sessionStates.size() >= MAX_SESSIONS) {
+            throw new IllegalStateException("Maximum session limit reached: " + MAX_SESSIONS);
+        }
+
+        // 3. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
+        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> GameState.initialize());
+
+        // 4. テトリミノを回転（衝突判定結果は GameState.rotateTetromino() 内でハンドリング）
+        GameState newState = currentState.rotateTetromino();
+
+        // 5. 回転後のGameStateをセッション管理領域に保存
+        sessionStates.put(sessionId, newState);
+
+        // 6. DTOに変換して返却
+        return GameStateMapper.toDTO(newState);
+    }
+
+    @Override
+    public void removeSession(String sessionId) {
         if (sessionId == null) {
             throw new NullPointerException("sessionId must not be null");
         }
+        sessionStates.remove(sessionId);
+    }
 
-        // 2. セッションIDに紐づくGameStateを取得（存在しない場合は初期化）
-        GameState currentState = sessionStates.computeIfAbsent(sessionId, k -> GameState.initialize());
-
-        // 3. テトリミノを回転（衝突判定結果は GameState.rotateTetromino() 内でハンドリング）
-        GameState newState = currentState.rotateTetromino();
-
-        // 4. 回転後のGameStateをセッション管理領域に保存
-        sessionStates.put(sessionId, newState);
-
-        // 5. DTOに変換して返却
-        return GameStateMapper.toDTO(newState);
+    /**
+     * sessionIdのバリデーションを行います。
+     *
+     * @param sessionId 検証するセッションID
+     * @throws NullPointerException sessionIdがnullの場合
+     * @throws IllegalArgumentException sessionIdが空文字列、または最大長を超える場合
+     */
+    private void validateSessionId(String sessionId) {
+        if (sessionId == null) {
+            throw new NullPointerException("sessionId must not be null");
+        }
+        if (sessionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("sessionId must not be empty");
+        }
+        if (sessionId.length() > MAX_SESSION_ID_LENGTH) {
+            throw new IllegalArgumentException(
+                    "sessionId exceeds maximum length (" + MAX_SESSION_ID_LENGTH + "): " + sessionId.length());
+        }
     }
 }
