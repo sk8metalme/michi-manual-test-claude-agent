@@ -158,14 +158,14 @@
 - **工数**: 1人日
 - **説明**: ScoreCalculatorクラス実装（Pure Function）
 - **タスク**:
-  - [ ] Task 2.4.1: ScoreCalculatorクラス実装（Pure Function）
-  - [ ] Task 2.4.2: スコア計算メソッド実装（calculateScore: 1行100点、2行300点、3行500点、4行800点）
-  - [ ] Task 2.4.3: Pattern Matchingで消去ライン数別の加算値返却
-  - [ ] Task 2.4.4: 単体テスト作成（0-4行の各ケース検証）
+  - [x] Task 2.4.1: ScoreCalculatorクラス実装（Pure Function）
+  - [x] Task 2.4.2: スコア計算メソッド実装（calculateScore: 1行100点、2行300点、3行500点、4行800点）
+  - [x] Task 2.4.3: Pattern Matchingで消去ライン数別の加算値返却
+  - [x] Task 2.4.4: 単体テスト作成（0-4行の各ケース検証）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 3.3, 3.4, 3.5, 3.6
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 3.3, 3.4, 3.5, 3.6
 - **並列実行**: 可能
 
 ### Story 2.5: LevelManagerロジック実装
@@ -173,14 +173,14 @@
 - **工数**: 1人日
 - **説明**: LevelManagerクラス実装（Pure Function）
 - **タスク**:
-  - [ ] Task 2.5.1: LevelManagerクラス実装（Pure Function）
-  - [ ] Task 2.5.2: レベル計算メソッド実装（calculateLevel: 10ラインごとにレベル+1、最大レベル10）
-  - [ ] Task 2.5.3: 落下間隔計算メソッド実装（calculateDropInterval: レベルごとに10%増速、初期1秒）
-  - [ ] Task 2.5.4: 単体テスト作成（レベル遷移、落下速度計算）
+  - [x] Task 2.5.1: LevelManagerクラス実装（Pure Function）
+  - [x] Task 2.5.2: レベル計算メソッド実装（calculateLevel: 10ラインごとにレベル+1、最大レベル10）
+  - [x] Task 2.5.3: 落下間隔計算メソッド実装（calculateDropInterval: レベルごとに10%増速、初期1秒）
+  - [x] Task 2.5.4: 単体テスト作成（レベル遷移、落下速度計算）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 4.1, 4.2, 4.3, 4.5
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 4.1, 4.2, 4.3, 4.5
 - **並列実行**: 可能
 
 ### Story 2.6: StartGameUseCase実装
@@ -188,16 +188,16 @@
 - **工数**: 1人日
 - **説明**: StartGameUseCaseインターフェース定義
 - **タスク**:
-  - [ ] Task 2.6.1: StartGameUseCaseインターフェース定義
-  - [ ] Task 2.6.2: ユースケース実装クラス作成（GameStateを初期化）
-  - [ ] Task 2.6.3: GameStateDTOレコード定義（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
-  - [ ] Task 2.6.4: TetrominoDTO変換ロジック実装
-  - [ ] Task 2.6.5: ドメインモデルからDTOへのマッピング実装
-  - [ ] Task 2.6.6: 単体テスト作成（ゲーム開始時の初期状態検証）
+  - [x] Task 2.6.1: StartGameUseCaseインターフェース定義
+  - [x] Task 2.6.2: ユースケース実装クラス作成（GameStateを初期化）
+  - [x] Task 2.6.3: GameStateDTOレコード定義（status, currentTetromino, nextTetromino, field, score, level, totalLinesCleared）
+  - [x] Task 2.6.4: TetrominoDTO変換ロジック実装
+  - [x] Task 2.6.5: ドメインモデルからDTOへのマッピング実装
+  - [x] Task 2.6.6: 単体テスト作成（ゲーム開始時の初期状態検証）
 - **受け入れ基準**:
-  - [ ] 実装完了
-  - [ ] 単体テスト作成・通過
-  - [ ] 要件充足: 5.4
+  - [x] 実装完了
+  - [x] 単体テスト作成・通過
+  - [x] 要件充足: 5.4
 - **並列実行**: 可能
 
 ### Story 2.7: MoveTetrominoUseCase実装
