@@ -1,8 +1,11 @@
 package com.example.tetris.presentation.config;
 
+import com.example.tetris.application.port.ScoreRepositoryPort;
+import com.example.tetris.application.usecase.StartGameUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -46,6 +49,12 @@ class WebSocketConfigTest {
     private int port;
 
     private String wsUrl;
+
+    @MockBean
+    private StartGameUseCase startGameUseCase;
+
+    @MockBean
+    private ScoreRepositoryPort scoreRepositoryPort;
 
     /**
      * 各テスト実行前にWebSocket URLを初期化します。

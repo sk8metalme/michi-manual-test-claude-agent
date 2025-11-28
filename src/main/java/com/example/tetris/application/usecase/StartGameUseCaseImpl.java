@@ -3,6 +3,7 @@ package com.example.tetris.application.usecase;
 import com.example.tetris.application.dto.GameStateDTO;
 import com.example.tetris.application.mapper.GameStateMapper;
 import com.example.tetris.domain.GameState;
+import org.springframework.stereotype.Component;
 
 /**
  * StartGameUseCaseの実装クラス。
@@ -32,6 +33,7 @@ import com.example.tetris.domain.GameState;
  * @version 1.0.0
  * @since 2025-11-27
  */
+@Component
 public class StartGameUseCaseImpl implements StartGameUseCase {
 
     /**
